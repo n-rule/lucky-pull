@@ -1,0 +1,126 @@
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+</head>
+<body>
+
+<h1 id="name">  FUT Lucky Pull 1.03 </h1>
+
+Min Buy: <input type="int" id="min_buy" value="10000">
+Max Buy: <input type="int" id="max_buy" value="40000">
+
+
+<script src="http://www.myersdaily.org/joseph/javascript/md5.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+<button id="button1">DSFUT Pull</button>
+<button id="button2">FUTSELL Pull</button>
+<p id="demo1"></p>
+<p id="demo2"></p>
+<p id="demo3"></p>
+<p id="demo4"></p>
+<p id="demo5"></p>
+<p id="demo6"></p>
+
+<input type="button" value="PLAY" onclick="play()">
+<audio id="audio" src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"></audio>
+
+
+<script>
+//define
+
+function play() {
+        var audio = document.getElementById("audio");
+        audio.play();
+      }
+
+
+
+
+const partnerId = '881'
+const secretKey = 'd53429d6bab5c978fbdeacd4ab6eb7d8'
+
+const partnerId2 = '37931'
+const secretKey2 = '1ce45b6ec6b5f342eebb09dff81babaf'
+
+
+document.body.style.background = 'grey'
+
+document.getElementById("button1").onclick = function() {getUrl()};
+document.getElementById("button2").onclick = function() {getUrl2()};
+
+
+
+function getUrl() {
+    let minBuy = document.getElementById('min_buy').value
+    console.log(minBuy)
+    let maxBuy = document.getElementById('max_buy').value
+    console.log(maxBuy)
+    let timestamp = Date.now()/1000|0
+    let signature = partnerId + secretKey + timestamp
+    let hash = md5(signature)
+    //console.log(hash)
+    let popUrl = ('https://dsfut.net/api/21/ps/'+partnerId+'/'+timestamp+'/'+hash+'?min_buy='+minBuy+'&max_buy='+maxBuy)
+    console.log(popUrl)
+    document.getElementById("name").innerHTML = popUrl;
+
+//     $.ajaxSetup({
+//     headers: {Access-Control-Allow-Origin: *}
+// });
+
+    $.getJSON(popUrl, function(data) {
+        let checkError = data.error
+        if (checkError == "") {
+            document.body.style.background = 'red';
+        }
+        else {
+          document.body.style.background = 'yellow';
+          play();
+        }
+        document.getElementById("demo1").innerHTML = data.error + " - " +data.message
+        document.getElementById("demo2").innerHTML = "Name - " + data.player.name
+        document.getElementById("demo3").innerHTML = "Start - " + data.player.startPrice
+        document.getElementById("demo4").innerHTML = "Buyout - " + data.player.buyNowPrice
+        document.getElementById("demo5").innerHTML = "Expires - " + data.player.expires
+        console.log = checkError
+
+    });
+}
+
+function getUrl2() {
+    let minBuy = document.getElementById('min_buy').value
+    console.log(minBuy)
+    let maxBuy = document.getElementById('max_buy').value
+    console.log(maxBuy)
+    let timestamp = Date.now()/1000|0
+    let signature = partnerId2 + secretKey2 + timestamp
+    let hash = md5(signature)
+    let popUrl = ('https://www.futsell.ru/ffa19/api/pop/id/'+partnerId2+'/ts/'+timestamp+'/sign/'+hash+'/sku/FFA19PS4/?min_buy='+minBuy+'&max_buy='+maxBuy)
+    console.log(popUrl)
+    document.getElementById("name").innerHTML = popUrl;
+
+    let checkError = 'error'
+
+    $.getJSON(popUrl, function(data) {
+        let checkError = data.error
+        if (checkError == "") {
+            document.body.style.background = 'red';
+        }
+        else {
+          document.body.style.background = 'yellow';
+          play();
+        }
+        document.getElementById("demo1").innerHTML = data.error + " - " +data.message
+        document.getElementById("demo2").innerHTML = "Name - " + data.player.name
+        document.getElementById("demo3").innerHTML = "Start - " + data.player.startingBid
+        document.getElementById("demo4").innerHTML = "Buyout - " + data.player.buyNowPrice
+        document.getElementById("demo5").innerHTML = "Expires - " + data.player.expires
+    });
+}
+
+
+</script>
+
+</body>
